@@ -79,7 +79,7 @@ github repo
 ## Authors
 
 
-*Stuart Kuredjian, [Github](https://github.com/dbconfession78) || [Twitter](https://twitter.com/StueyGK) || [LinkedIn](https://www.linkedin.com/in/stuart-kuredjian-8100a273/)
+* Stuart Kuredjian, [Github](https://github.com/dbconfession78) || [Twitter](https://twitter.com/StueyGK) || [LinkedIn](https://www.linkedin.com/in/stuart-kuredjian-8100a273/)
 * Naomi Sorrell, [Github](https://github.com/NamoDawn) || [Twitter](https://twitter.com/namodawn) || [LinkedIn](https://www.linkedin.com/in/naomi-sorrell-a26389133/)
 * MJ Johnson, [@mj31508](https://github.com/mj31508)
 * David John Coleman II, [davidjohncoleman.com](http://www.davidjohncoleman.com/)
