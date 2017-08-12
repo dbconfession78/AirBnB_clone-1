@@ -46,8 +46,16 @@ class HBNBCommand(cmd.Cmd):
         """private checks for missing ID or unknown ID"""
         error = 0
         if (len(arg) < 2):
+            error += 1
             print(HBNBCommand.ERR[2])
-            error = 1
+        if not error:
+            fs_o = FS.all()
+            for k, v in fs_o.items():
+                temp_id = k.split('.')[1]
+                if temp_id == arg[1] and arg[0] in k:
+                    return error
+            error += 1
+            print(HBNBCommand.ERR[3])
         return error
 
     def do_airbnb(self, arg):
