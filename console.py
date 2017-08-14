@@ -104,7 +104,8 @@ class HBNBCommand(cmd.Cmd):
         if not error:
             for k, v in CNC.items():
                 if k == args[0]:
-                    my_obj = v() #<---- need to use v(**kwargs)
+                    my_obj = v()
+#                    my_obj = v(**kwargs) #<---- need to use v(**kwargs)
                     my_obj.save()
                     print(my_obj.id)
 
