@@ -7,12 +7,14 @@ import json
 import models
 from uuid import uuid4, UUID
 from datetime import datetime
+from sqlalchemy.ext.declarative import declarative_base
+
 
 now = datetime.now
 strptime = datetime.strptime
 
 
-class BaseModel:
+class BaseModel():
     """attributes and functions for BaseModel class"""
 
     def __init__(self, *args, **kwargs):
