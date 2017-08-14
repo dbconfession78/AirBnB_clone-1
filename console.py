@@ -3,12 +3,12 @@
 Command interpreter for Holberton AirBnB project
 """
 import cmd
-from models import base_model, user, storage, CNC
+from models import *
+
 
 BaseModel = base_model.BaseModel
 User = user.User
 FS = storage
-
 
 class HBNBCommand(cmd.Cmd):
     """Command inerpreter class"""
@@ -22,9 +22,13 @@ class HBNBCommand(cmd.Cmd):
         '** value missing **',
         ]
 
-    def default(self, line):
-        """default response for unknown commands"""
-        pass
+    classes = {"BaseMmodel", "Amenity", "City", "Place", "Review", "State", "User"}
+
+# Leave commented until I ask John why he has this.
+
+#    def default(self, line):
+#        """default response for unknown commands"""
+#        pass
 
     def emptyline(self):
         """Called when an empty line is entered in response to the prompt."""
@@ -80,12 +84,27 @@ class HBNBCommand(cmd.Cmd):
         """create: create [ARG]
         ARG = Class Name
         SYNOPSIS: Creates a new instance of the Class from given input ARG"""
-        arg = arg.split()
-        error = self.__class_err(arg)
+
+        # put arg key/vals  into dict
+        args = arg.split()
+        kwargs = {}
+        for arg in args[1:]:
+            key = arg.split("=")[0]
+            val = arg.split("=")[1]
+
+            # remove double quotes if present
+            if val[0] == '"' and val[-1] == '"':
+                val = str(val)
+                val = val.replace("_", " ")
+                val = val[1:-1]
+            setattr(self, key, val)
+            kwargs[key] = val
+
+        error = self.__class_err(args)
         if not error:
             for k, v in CNC.items():
-                if k == arg[0]:
-                    my_obj = v()
+                if k == args[0]:
+                    my_obj = v() #<---- need to use v(**kwargs)
                     my_obj.save()
                     print(my_obj.id)
 
