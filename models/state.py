@@ -6,10 +6,11 @@ State Class from Models Module
 from models.base_model import BaseModel
 
 
-class State(BaseModel):
+class State(BaseModel, Base):
     """State class handles all application states"""
-
-    name = ''
+    __tablename__ = 'states'
+    name = Column(String(128), nullable=False)
+    cities = relationship("City", cascade="all", backref="state")
 
     def __init__(self, *args, **kwargs):
         """instantiates a new state"""
