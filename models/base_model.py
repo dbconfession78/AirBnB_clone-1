@@ -26,27 +26,41 @@ class BaseModel():
             self.created_at = now()
             models.storage.new(self)
 
+#        self.created_at = now()
+#        self.id = str(uuid4())
+#        if(kwargs):
+#            d = self.__dict__
+#            self.created_at = now()
+#            self.__set_attributes(d, kwargs)
+#            models.storage.new(self)
+#        else:
+#            self.created_at = now()
+#            models.storage.new(self)
+
     @classmethod
     def __set_date_time(self, d, dt_key):
-        input(d)
-        d[dt_key] = strptime(d['updated_at'],
-                                   "%Y-%m-%d %H:%M:%S.%f")
+        if 'update_at' in d:
+            d[dt_key] = strptime(d['updated_at'],
+                                 "%Y-%m-%d %H:%M:%S.%f")
         return d
 
-    def __set_attributes(self, d):
+    def __set_attributes_NEW(self, d, kwargs):
         if 'created_at' in d:
             d = self.__set_date_time(d, 'created_at')
-            input(d)
         if 'updated_at' in d:
             d = self.__set_date_time(d, 'updated_at')
-            input(d)
 
-        if d['__class__']:
+        for k, v in d.items():
+            d[k] = v
+        for k, v in kwargs.items():
+            d[k] = v
+
+        if '__class__' in d:
             d.pop('__class__')
         self.__dict__ = d
-        input(d)
 
-    def __set_attributes_OLD(self, d):
+    # TO DELETE
+    def __set_attributes(self, d):
         """converts kwargs values to python class attributes"""
         if not isinstance(d['created_at'], datetime):
             d['created_at'] = strptime(d['created_at'], "%Y-%m-%d %H:%M:%S.%f")
