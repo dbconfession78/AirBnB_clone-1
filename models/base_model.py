@@ -78,7 +78,6 @@ class BaseModel():
         bm_dict["__class__"] = type(self).__name__
         if '_sa_instance_state' in bm_dict:
             bm_dict.pop('_sa_instance_state')
-        input("BM_DICT: {}".format(bm_dict))
         return(bm_dict)
 
     def __str__(self):
