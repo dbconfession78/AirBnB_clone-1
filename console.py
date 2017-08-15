@@ -102,9 +102,13 @@ class HBNBCommand(cmd.Cmd):
 
         error = self.__class_err(args)
         if not error:
-            for k, v in CNC.items():
+            for (k, v) in CNC.items():
                 if k == args[0]:
-                    my_obj = v() #<---- need to use v(**kwargs)
+                    my_obj = v() # create object
+                    if kwargs: # update object with user input params
+                        for k, v in kwargs.items():
+                            update_str = "{} {} {} {}".format(type(my_obj).__name__, my_obj.id, k, v)
+                            self.do_update(update_str)
                     my_obj.save()
                     print(my_obj.id)
 
