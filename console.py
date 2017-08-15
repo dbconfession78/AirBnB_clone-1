@@ -10,6 +10,7 @@ BaseModel = base_model.BaseModel
 User = user.User
 FS = storage
 
+
 class HBNBCommand(cmd.Cmd):
     """Command inerpreter class"""
     prompt = '(hbnb) '
@@ -22,13 +23,8 @@ class HBNBCommand(cmd.Cmd):
         '** value missing **',
         ]
 
-    classes = {"BaseMmodel", "Amenity", "City", "Place", "Review", "State", "User"}
-
-# Leave commented until I ask John why he has this.
-
-#    def default(self, line):
-#        """default response for unknown commands"""
-#        pass
+    classes = {"BaseMmodel", "Amenity", "City", "Place",
+               "Review", "State", "User"}
 
     def emptyline(self):
         """Called when an empty line is entered in response to the prompt."""
@@ -50,16 +46,8 @@ class HBNBCommand(cmd.Cmd):
         """private checks for missing ID or unknown ID"""
         error = 0
         if (len(arg) < 2):
-            error += 1
             print(HBNBCommand.ERR[2])
-        if not error:
-            fs_o = FS.all()
-            for k, v in fs_o.items():
-                temp_id = k.split('.')[1]
-                if temp_id == arg[1] and arg[0] in k:
-                    return error
-            error += 1
-            print(HBNBCommand.ERR[3])
+            error = 1
         return error
 
     def do_airbnb(self, arg):
@@ -80,6 +68,22 @@ class HBNBCommand(cmd.Cmd):
         print()
         return True
 
+    def set_type(self, val):
+        if val[0] == '"' and val[-1] == '"':
+            val = str(val)
+            val = val[1:-1]
+            val = val.replace('"', '\"')
+            val = val.replace("_", " ")
+            return val
+        if val.isdigit():
+            val = int(val)
+        else:
+            try:
+                val = float(val)
+            except:
+                pass
+        return val
+
     def do_create(self, arg):
         """create: create [ARG]
         ARG = Class Name
@@ -87,28 +91,20 @@ class HBNBCommand(cmd.Cmd):
 
         # put arg key/vals  into dict
         args = arg.split()
-        kwargs = {}
-        for arg in args[1:]:
-            key = arg.split("=")[0]
-            val = arg.split("=")[1]
+        if args[0] in CNC:
+            cname = args[0]
+            kwargs = {}
+            for arg in args[1:]:
+                key = arg.split("=")[0]
+                val = arg.split("=")[1]
 
-            # remove double quotes if present
-            if val[0] == '"' and val[-1] == '"':
-                val = str(val)
-                val = val.replace("_", " ")
-                val = val[1:-1]
-            setattr(self, key, val)
-            kwargs[key] = val
-
+                val = self.set_type(val)
+                kwargs[key] = val
         error = self.__class_err(args)
         if not error:
             for (k, v) in CNC.items():
-                if k == args[0]:
-                    my_obj = v() # create object
-                    if kwargs: # update object with user input params
-                        for k, v in kwargs.items():
-                            update_str = "{} {} {} {}".format(type(my_obj).__name__, my_obj.id, k, v)
-                            self.do_update(update_str)
+                if k == cname:
+                    my_obj = v(**kwargs)  # create object
                     my_obj.save()
                     print(my_obj.id)
 
@@ -208,31 +204,31 @@ class HBNBCommand(cmd.Cmd):
         error = self.__class_err(arg)
         if not error:
             error += self.__id_err(arg)
-        if not error:
-            valid_id = 0
-            fs_o = FS.all()
-            for k in fs_o.keys():
-                if arg[1] in k and arg[0] in k:
-                    valid_id = 1
-                    key = k
-            if not valid_id:
-                print(HBNBCommand.ERR[3])
-            else:
-                if len(arg) < 3:
-                    print(HBNBCommand.ERR[4])
-                elif len(arg) < 4:
-                    print(HBNBCommand.ERR[5])
-                else:
-                    if not d:
-                        avalue = arg[3].strip('"')
-                        if avalue.isdigit():
-                            avalue = int(avalue)
-                        fs_o[key].bm_update(arg[2], avalue)
-                    else:
-                        for k, v in d.items():
-                            if v.isdigit():
-                                v = int(v)
-                            fs_o[key].bm_update(k, v)
+            if not error:
+                valid_id = 0
+                fs_o = FS.all()
+                for k in fs_o.keys():
+                    if arg[1] in k and arg[0] in k:
+                        valid_id = 1
+                        key = k
+                        if not valid_id:
+                            print(HBNBCommand.ERR[3])
+                        else:
+                            if len(arg) < 3:
+                                print(HBNBCommand.ERR[4])
+                            elif len(arg) < 4:
+                                print(HBNBCommand.ERR[5])
+                            else:
+                                if not d:
+                                    avalue = arg[3].strip('"')
+                                    if avalue.isdigit():
+                                        avalue = int(avalue)
+                                        fs_o[key].bm_update(arg[2], avalue)
+                                    else:
+                                        for k, v in d.items():
+                                            if v.isdigit():
+                                                v = int(v)
+                                                fs_o[key].bm_update(k, v)
 
     def do_BaseModel(self, arg):
         """class method with .function() syntax
