@@ -8,7 +8,7 @@ import models
 from uuid import uuid4, UUID
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, DateTime
 
 Base = declarative_base()
 now = datetime.now
@@ -19,28 +19,34 @@ class BaseModel():
     """attributes and functions for BaseModel class"""
 
     id = Column(String(60), nullable=False, primary_key=True)
-    created_at = Column(datetime, nullable=False, default=datetime.utcnow())
-    update_at = Column(datetime, nullable=False, default=datetime.utcnow())
-    
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    update_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """instantiation of new BaseModel Class"""
+        self.id = str(uuid4())
+        self.created_at = now()
         if kwargs:
-            self.__set_attributes(kwargs)
-        else:
-            self.id = str(uuid4())
-            self.created_at = now()
+            for k, v in kwargs.items():
+                self.__dict__[k] = v
+                self.__set_attributes(kwargs)
 
     def __set_attributes(self, d):
         """converts kwargs values to python class attributes"""
+        d = self.__dict__
+        for k, v in d.items():
+            d[k] = v
+
         if not isinstance(d['created_at'], datetime):
             d['created_at'] = strptime(d['created_at'], "%Y-%m-%d %H:%M:%S.%f")
         if 'updated_at' in d:
             if not isinstance(d['updated_at'], datetime):
                 d['updated_at'] = strptime(d['updated_at'],
                                            "%Y-%m-%d %H:%M:%S.%f")
-        if d['__class__']:
+        if '__class__' in d:
             d.pop('__class__')
+        if '_sa_instance_state' in d:
+            d.pop('_sa_instance_state')
         self.__dict__ = d
 
     def __is_serializable(self, obj_v):
@@ -71,8 +77,8 @@ class BaseModel():
                 bm_dict[k] = str(v)
         bm_dict["__class__"] = type(self).__name__
         if '_sa_instance_state' in bm_dict:
-            del bm_dict['_sa_instance_state']
-
+            bm_dict.pop('_sa_instance_state')
+        input("BM_DICT: {}".format(bm_dict))
         return(bm_dict)
 
     def __str__(self):

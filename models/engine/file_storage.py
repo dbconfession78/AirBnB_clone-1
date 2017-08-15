@@ -28,7 +28,12 @@ class FileStorage:
     __file_path = './dev/file.json'
     __objects = {}
 
-    def all(self):
+    def delete(self, obj=None):
+        """ deletes obj from __objects if it extists """
+        if obj in FileStorage.__objects:
+            del(FileStorage.__objects[obj])
+
+    def all(self, cls=None):
         """returns private attribute: __objects"""
         return FileStorage.__objects
 
