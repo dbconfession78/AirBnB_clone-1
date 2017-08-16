@@ -54,9 +54,13 @@ class TestAmenityInstances(unittest.TestCase):
 
     def setUp(self):
         """initializes new amenity for testing"""
-        self.amenity = Amenity()
-        if (HBNB_TYPE_STORAGE == "db"):
+        if (environ(HBNB_TYPE_STORAGE) == "db"):
             DBStorage.__init__()
+            amenityA = Amenity(name = "wifi")
+            DBStorage.new(amenityA)
+            DBStorage.save()
+        else:
+            self.amenity = Amenity()
 
     @unittest.skipIf(environ(HBNH_TYPE_STORAGE) == "file",
                      "Tear down only for DB engine testing")
@@ -130,9 +134,7 @@ class TestAmenityInstances(unittest.TestCase):
     @unittest.skipIf(environ(HBNB_TYPE_STORAGE)=="file",
                     "File doesn't necessitate ID check in MYSQLDB")
     def test_amenity_id(self):
-        expected = self.amenity.id
-        DBStorage.new(self.amenity)
-        DBStorage.save()
+        expected = self.amenityA.id
         actual = DBStorage.__session.query(Amenity).filter\
                  (Amenity.id==expected).one()
         self.assertTrue(expected==actual)
@@ -140,15 +142,13 @@ class TestAmenityInstances(unittest.TestCase):
     @unittest.skipIf(environ(HBNB_TYPE_STORAGE)=='file',
                      "File doesn't necessiate check in DB")
     def test_name_attribute(self):
-        DBStorage.new(self.amenity)
-        DBStorage.save()
         expected = "wifi"
         amenity_name = session.query(Amenity).filter(
-            Amenity.id==self.amenity.id).one()
+            Amenity.id==self.amenityA.id).one()
         amenity_name.name = "wifi"
         DBStorage.save(amenity_name)
         actual = DBStorage.__session.query(Amenity.name).filter(
-            Amenity.id==self.amenity.id).one()
+            Amenity.id==self.amenityA.id).one()
         self.assertEqual(actual, expected)
 
 if __name__ == '__main__':
