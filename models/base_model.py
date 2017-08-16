@@ -9,6 +9,7 @@ from uuid import uuid4, UUID
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, DateTime
+from os import getenv
 
 Base = declarative_base()
 now = datetime.now
@@ -18,9 +19,10 @@ strptime = datetime.strptime
 class BaseModel():
     """attributes and functions for BaseModel class"""
 
-    id = Column(String(60), nullable=False, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    update_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    if getenv("HBNB_MYSQL_DB") == "db":
+        id = Column(String(60), nullable=False, primary_key=True)
+        created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+        update_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """instantiation of new BaseModel Class"""
