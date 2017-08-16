@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 import os
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
 from models.base_model import Base
 from models.user import User
@@ -26,6 +26,9 @@ class DBStorage():
     }
 
     def __init__(self):
+        """
+        Initializes an instance of the DBStorage class
+        """
         user = os.environ["HBNB_MYSQL_USER"]
         pwd = os.environ["HBNB_MYSQL_PWD"]
         host = os.environ["HBNB_MYSQL_HOST"]
@@ -39,17 +42,43 @@ class DBStorage():
                 Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        Session = sessionmaker()
-        self.__session = Session(bind=self.__engine)
-
         objects = {}
-        if cls is None:
-            for cls in self.__CNC.keys():
-                cls = getattr(sys.modules["models"], cls)
-                for obj in self.__session.query(self.__CNC(cls)):
-                    objects.uopdate({obj.id: obj})
-            return objects
-        else:
-            for obj in self.__session.query(self.__CNC(cls)):
+        if cls:
+            # user does not specify Class, so return all
+            for obj in self.__session.query(self.__CNC[cls]):
                 objects.update({obj.id: obj})
             return(objects)
+        else:
+            # find user defined Class name in CNC dict
+            for cls in self.__CNC.keys():
+                input(cls)
+                cls = getattr(sys.modules["models"], cls)
+                for obj in self.__session.query(cls):
+                    objects.update({obj.id: obj})
+            return objects
+
+    def new(self, obj):
+        """
+        adds the object to the current database session
+        """
+        self.__session.add(obj)
+
+    def delete(self, obj=None):
+        """
+        removes the object from the currect database session
+        """
+        if obj:
+            self.__session.delete(obj)
+
+    def reload(self):
+        """
+        opens a new db scoped session
+        """
+        Base.metadata.create_all(self.__engine)
+        self.__session = scoped_session(sessionmaker(bind=self.__engine))
+
+    def save(self):
+        """
+        commit all changes of the current db session
+        """
+        self.__session.commit()
