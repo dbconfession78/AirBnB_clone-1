@@ -6,6 +6,8 @@ import unittest
 from datetime import datetime
 import models
 import json
+from os import environ
+from models.engine.db_storage import DBStorage
 
 Amenity = models.amenity.Amenity
 BaseModel = models.base_model.BaseModel
@@ -53,6 +55,15 @@ class TestAmenityInstances(unittest.TestCase):
     def setUp(self):
         """initializes new amenity for testing"""
         self.amenity = Amenity()
+        if (HBNB_TYPE_STORAGE == "db"):
+            DBStorage.__init__()
+
+    @unittest.skipIf(environ(HBNH_TYPE_STORAGE) == "file",
+                     "Tear down only for DB engine testing")
+    def tearDown(self):
+        """tear down engine and session of testing for db"""
+        DBStorage.__session.close()
+        DBStorage.__engine.close()
 
     def test_instantiation(self):
         """... checks if Amenity is properly instantiated"""
@@ -66,7 +77,7 @@ class TestAmenityInstances(unittest.TestCase):
         for sub_str in my_list:
             if sub_str in my_str:
                 actual += 1
-        self.assertTrue(3 == actual)
+                self.assertTrue(3 == actual)
 
     def test_instantiation_no_updated(self):
         """... should not have updated attribute"""
@@ -74,7 +85,7 @@ class TestAmenityInstances(unittest.TestCase):
         actual = 0
         if 'updated_at' in my_str:
             actual += 1
-        self.assertTrue(0 == actual)
+            self.assertTrue(0 == actual)
 
     def test_updated_at(self):
         """... save function should add updated_at attribute"""
@@ -83,6 +94,8 @@ class TestAmenityInstances(unittest.TestCase):
         expected = type(datetime.now())
         self.assertEqual(expected, actual)
 
+    @unittest.skipIf(environ(HBNB_TYPE_STORAGE)=="db",
+                             "If DBstorage is used vs File Storage engine")
     def test_to_json(self):
         """... to_json should return serializable dict object"""
         self.amenity_json = self.amenity.to_json()
@@ -91,16 +104,18 @@ class TestAmenityInstances(unittest.TestCase):
             serialized = json.dumps(self.amenity_json)
         except:
             actual = 0
-        self.assertTrue(1 == actual)
+            self.assertTrue(1 == actual)
 
+    @unittest.skipIf(environ(HBNB_TYPE_STORAGE)=="db",
+                             "If DBstorage is used vs File Storage engine")
     def test_json_class(self):
         """... to_json should include class key with value Amenity"""
         self.amenity_json = self.amenity.to_json()
         actual = None
         if self.amenity_json['__class__']:
             actual = self.amenity_json['__class__']
-        expected = 'Amenity'
-        self.assertEqual(expected, actual)
+            expected = 'Amenity'
+            self.assertEqual(expected, actual)
 
     def test_email_attribute(self):
         """... add email attribute"""
@@ -109,8 +124,32 @@ class TestAmenityInstances(unittest.TestCase):
             actual = self.amenity.name
         else:
             actual = ''
-        expected = "greatWifi"
-        self.assertEqual(expected, actual)
+            expected = "greatWifi"
+            self.assertEqual(expected, actual)
+
+    @unittest.skipIf(environ(HBNB_TYPE_STORAGE)=="file",
+                    "File doesn't necessitate ID check in MYSQLDB")
+    def test_amenity_id(self):
+        expected = self.amenity.id
+        DBStorage.new(self.amenity)
+        DBStorage.save()
+        actual = DBStorage.__session.query(Amenity).filter\
+                 (Amenity.id==expected).one()
+        self.assertTrue(expected==actual)
+
+    @unittest.skipIf(environ(HBNB_TYPE_STORAGE)=='file',
+                     "File doesn't necessiate check in DB")
+    def test_name_attribute(self):
+        DBStorage.new(self.amenity)
+        DBStorage.save()
+        expected = "wifi"
+        amenity_name = session.query(Amenity).filter(
+            Amenity.id==self.amenity.id).one()
+        amenity_name.name = "wifi"
+        DBStorage.save(amenity_name)
+        actual = DBStorage.__session.query(Amenity.name).filter(
+            Amenity.id==self.amenity.id).one()
+        self.assertEqual(actual, expected)
 
 if __name__ == '__main__':
-    unittest.main
+                     unittest.main
