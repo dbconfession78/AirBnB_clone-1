@@ -163,15 +163,11 @@ class HBNBCommand(cmd.Cmd):
         if not error:
             error += self.__id_err(args)
         if not error:
-            all_obj = storage.all()
-            input("************************")            
-            storage.delete(args[1])
-            fs_o = storage.all()
-            for k in fs_o.keys():
-                if args[1] in k and args[0] in k:
-                    del fs_o[k]
-                    storage.save()
-                    return
+            all_objs = storage.all()
+            if all_objs[args[1]] and args[0] in str(type(all_objs[args[1]])):
+                storage.delete(all_objs[args[1]])
+                storage.save()
+                return
             print(HBNBCommand.ERR[3])
 
     def __rreplace(self, s, l):
