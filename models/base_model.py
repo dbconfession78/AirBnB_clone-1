@@ -78,6 +78,7 @@ class BaseModel():
 
     def to_json(self):
         """returns json representation of self"""
+        bm_dict = {}
         for k, v in (self.__dict__).items():
             if (self.__is_serializable(v)):
                 bm_dict[k] = v
