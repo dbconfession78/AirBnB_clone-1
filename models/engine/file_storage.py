@@ -27,7 +27,6 @@ class FileStorage:
     """
     __file_path = './dev/file.json'
     __objects = {}
-    
 
     def delete(self, obj=None):
         """ deletes obj from __objects if it extists """

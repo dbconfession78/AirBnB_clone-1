@@ -51,11 +51,9 @@ class DBStorage():
         else:
             # find user defined Class name in CNC dict
             for cls in self.__CNC.keys():
-#                input(cls)
                 cls = getattr(sys.modules["models"], cls)
                 for obj in self.__session.query(cls):
                     objects.update({obj.id: obj})
-#            input(objects)
             return objects
 
     def new(self, obj):
