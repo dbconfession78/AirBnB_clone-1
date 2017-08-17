@@ -127,9 +127,7 @@ class HBNBCommand(cmd.Cmd):
         if type(obj) == City:
             if (
                     obj.name is None or
-                    obj.state_id is None or
-                    obj.Name == "" or
-                    obj.state_id == ""):
+                    obj.state_id is None):
                 return 0
             all_objs = storage.all()
             if args['state_id'] not in all_objs:
@@ -138,45 +136,31 @@ class HBNBCommand(cmd.Cmd):
         if type(obj) == Place:
             if (
                     obj.city_id is None or
-                    obj.city == "" or
                     obj.user_id is None or
-                    obj.user_id == "" or
                     obj.name is None or
-                    obj.name == "" or
                     obj.number_rooms is None or
-                    obj.number_rooms == "" or
                     obj.number_bathrooms is None or
-                    obj.number_bathrooms == "" or
                     obj.max_guest is None or
-                    obj.max_guest == "" or
-                    obj.price_by_night is None or
-                    obj.price_by_night == ""):
+                    obj.price_by_night is None):
                 return 0
 
         if type(obj) == User:
             if (
                     obj.email is None or
-                    obj.email == "" or
                     obj.password is None or
-                    obj.password == "" or
                     obj.first_name is None or
-                    obj.first_name == "" or
-                    obj.last_name is None or
-                    obj.last_name == ""):
+                    obj.last_name is None):
                 return 0
 
         if type(obj) == Review:
             if (
                     obj.text is None or
-                    obj.text == "" or
                     obj.place_id is None or
-                    obj.place_id == "" or
-                    obj.user_id is None or
-                    obj.user_id == ""):
+                    obj.user_id is None):
                 return 0
 
         if type(obj) == Amenity:
-            if (obj.name is None or obj.name == ""):
+            if (obj.name is None):
                 return 0
 
         return 1
