@@ -69,6 +69,9 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def set_type(self, val):
+        """
+        sets the type for the passed value
+        """
         if val[0] == '"' and val[-1] == '"':
             val = str(val)
             val = val[1:-1]
@@ -324,6 +327,9 @@ class HBNBCommand(cmd.Cmd):
         print(count)
 
     def __parse_exec(self, c, arg):
+        """
+        TBD
+        """
         CMD_MATCH = {
             '.all': self.do_all,
             '.count': self.__count,
