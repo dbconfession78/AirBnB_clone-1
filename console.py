@@ -111,8 +111,8 @@ class HBNBCommand(cmd.Cmd):
             for (k, v) in CNC.items():
                 if k == cname:
                     my_obj = v(**kwargs)  # create object
-                    if (self.check_params(my_obj, kwargs) == 0):
-                        return
+#                    if (self.check_params(my_obj, kwargs) == 0):
+#                        return
                     my_obj.save()
                     print(my_obj.id)
 
@@ -121,7 +121,7 @@ class HBNBCommand(cmd.Cmd):
         checks objects for unique required parameters
         """
         if type(obj) == State:
-            if obj.name is None or obj.name == "":
+            if obj.name is None:
                 return 0
 
         if type(obj) == City:
