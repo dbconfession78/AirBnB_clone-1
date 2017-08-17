@@ -4,11 +4,11 @@ Command interpreter for Holberton AirBnB project
 """
 import cmd
 from models import *
+from models import storage
 
 
 BaseModel = base_model.BaseModel
 User = user.User
-FS = storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -118,7 +118,7 @@ class HBNBCommand(cmd.Cmd):
         if not error:
             error += self.__id_err(arg)
         if not error:
-            fs_o = FS.all()
+            fs_o = storage.all()
             for k, v in fs_o.items():
                 if arg[1] in k and arg[0] in k:
                     print(v)
@@ -135,7 +135,7 @@ class HBNBCommand(cmd.Cmd):
             error = self.__class_err(arg)
         if not error:
             print('[', end='')
-            fs_o = FS.all()
+            fs_o = storage.all()
             l = 0
             if arg:
                 for v in fs_o.values():
@@ -153,21 +153,24 @@ class HBNBCommand(cmd.Cmd):
                     print(v, end=(', ' if c < l else ''))
             print(']')
 
-    def do_destroy(self, arg):
+    def do_destroy(self, args):
         """destroy: destroy [ARG] [ARG1]
         ARG = Class
         ARG1 = ID #
         SYNOPSIS: destroys object of given ID from given Class"""
-        arg = arg.split()
-        error = self.__class_err(arg)
+        args = args.split()
+        error = self.__class_err(args)
         if not error:
-            error += self.__id_err(arg)
+            error += self.__id_err(args)
         if not error:
-            fs_o = FS.all()
+            all_obj = storage.all()
+            input("************************")            
+            storage.delete(args[1])
+            fs_o = storage.all()
             for k in fs_o.keys():
-                if arg[1] in k and arg[0] in k:
+                if args[1] in k and args[0] in k:
                     del fs_o[k]
-                    FS.save()
+                    storage.save()
                     return
             print(HBNBCommand.ERR[3])
 
@@ -206,7 +209,7 @@ class HBNBCommand(cmd.Cmd):
             error += self.__id_err(arg)
             if not error:
                 valid_id = 0
-                fs_o = FS.all()
+                fs_o = storage.all()
                 for k in fs_o.keys():
                     if arg[1] in k and arg[0] in k:
                         valid_id = 1
@@ -267,7 +270,7 @@ class HBNBCommand(cmd.Cmd):
 
     def __count(self, arg):
         args = arg.split()
-        fs_o = FS.all()
+        fs_o = storage.all()
         count = 0
         for k in fs_o.keys():
             if args[0] in k:

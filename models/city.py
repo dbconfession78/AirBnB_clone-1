@@ -3,22 +3,20 @@
 City Class from Models Module
 """
 
-from models.base_model import BaseModel,  Base
+from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
-from os import getenv
+from os import getenv, environ
 
 class City(BaseModel, Base):
     """City class handles all application cities"""
-    if getenv("HBNB_MYSQL_DB") == "db":
+    if 'HBNB_TYPE_STORAGE' in environ and environ['HBNB_TYPE_STORAGE'] == 'db':
         __tablename__ = 'cities'
-        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
         name = Column(String(128), nullable=False)
-        places = relationship("Place", cascade="all, delete-orphan", 
-                              backref="cities")
+        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
     else:
-        state_id = ""
         name = ""
+        state_id = ""
 
     def __init__(self, *args, **kwargs):
         """instantiates a new city"""

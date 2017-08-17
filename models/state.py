@@ -6,18 +6,17 @@ State Class from Models Module
 from models.base_model import BaseModel, Base
 from sqlalchemy import String, Column
 from sqlalchemy.orm import relationship
-from os import getenv
+from os import environ
 
 
 class State(BaseModel, Base):
     """State class handles all application states"""
 
-    if getenv("HBNB_MYSQL_DB") == "db":
+    if 'HBNB_TYPE_STORAGE' in environ and environ['HBNB_TYPE_STORAGE'] == 'db':
         __tablename__ = 'states'
         name = Column(String(128), nullable=False)
         cities = relationship("City", cascade="all, delete-orphan",
                               backref="state")
-
     else:
         name = ""
 

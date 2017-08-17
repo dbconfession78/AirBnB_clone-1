@@ -4,14 +4,18 @@ BaseModel Class of Models Module
 """
 
 import json
+import os
 import models
 from uuid import uuid4, UUID
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, DateTime
-from os import getenv
 
-Base = declarative_base()
+if ('HBNB_TYPE_STORAGE' in os.environ and os.environ['HBNB_TYPE_STORAGE'] == 'db'):
+    Base = declarative_base()
+else:
+    Base = object
+
 now = datetime.now
 strptime = datetime.strptime
 
@@ -19,10 +23,10 @@ strptime = datetime.strptime
 class BaseModel():
     """attributes and functions for BaseModel class"""
 
-    if getenv("HBNB_MYSQL_DB") == "db":
+    if os.getenv("HBNB_TYPE_STORAGE") == "db":
         id = Column(String(60), nullable=False, primary_key=True)
         created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-        update_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+        updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """instantiation of new BaseModel Class"""
@@ -47,8 +51,9 @@ class BaseModel():
                                            "%Y-%m-%d %H:%M:%S.%f")
         if '__class__' in d:
             d.pop('__class__')
-        if '_sa_instance_state' in d:
-            d.pop('_sa_instance_state')
+#        if '_sa_instance_state' in d:
+#            input("pop")
+#            d.pop('_sa_instance_state')
         self.__dict__ = d
 
     def __is_serializable(self, obj_v):
@@ -71,7 +76,6 @@ class BaseModel():
 
     def to_json(self):
         """returns json representation of self"""
-        bm_dict = {}
         for k, v in (self.__dict__).items():
             if (self.__is_serializable(v)):
                 bm_dict[k] = v

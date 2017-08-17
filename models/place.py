@@ -3,15 +3,16 @@
 Place Class from Models Module
 """
 from models.base_model import BaseModel, Base
+from models.amenity import Amenity  # FIXED: added Amenity for PlaceAmenity fix below
 from sqlalchemy import Column, String, Integer, ForeignKey, Float
 from sqlalchemy.orm import relationship
-from os import getenv
+from os import getenv, environ
 
 
 class Place(BaseModel, Base):
     """Place class handles all application places"""
 
-    if getenv("HBNB_MYSQL_DB") == "db":
+    if 'HBNB_TYPE_STORAGE' in environ and environ['HBNB_TYPE_STORAGE'] == 'db':
         __tablename__ = 'places'
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
@@ -49,10 +50,15 @@ class Place(BaseModel, Base):
 class PlaceAmenity(Base):
     """class PlaceAmenity is an associative table of Place & amenities"""
 
-    if getenv("HBNB_MYSQL_DB") == "db":
+    if 'HBNB_TYPE_STORAGE' in environ and environ['HBNB_TYPE_STORAGE'] == 'db':
         __tablename__ = "place_amenity"
         metadata = Base.metadata
         place_id = Column(String(60), ForeignKey('places.id'),
                           primary_key=True, nullable=False)
         amenity_id = Column(String(60), ForeignKey('amenities.id'),
                             primary_key=True, nullable=False)
+
+        def __init__(self, *args, **kwargs):
+            """
+            initializes an new instance of PlaceAmenity
+            """

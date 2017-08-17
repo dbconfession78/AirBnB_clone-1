@@ -51,10 +51,11 @@ class DBStorage():
         else:
             # find user defined Class name in CNC dict
             for cls in self.__CNC.keys():
-                input(cls)
+#                input(cls)
                 cls = getattr(sys.modules["models"], cls)
                 for obj in self.__session.query(cls):
                     objects.update({obj.id: obj})
+#            input(objects)
             return objects
 
     def new(self, obj):
@@ -67,7 +68,7 @@ class DBStorage():
         """
         removes the object from the currect database session
         """
-        if obj:
+        if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):

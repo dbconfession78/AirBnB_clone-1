@@ -5,18 +5,17 @@ Amenity Class from Models Module
 
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String
+from os import environ
 from sqlalchemy.orm import relationship
-from os import getenv
-# from models.place_amenity import PlaceAmenity
 
 
 class Amenity(BaseModel, Base):
     """Amenity class handles all application amenities"""
-    if getenv("HBNB_MYSQL_DB") == "db":
-        name = Column(String(128), nullable=False)
+    if 'HBNB_TYPE_STORAGE' in environ and environ["HBNB_TYPE_STORAGE"] == 'db':
         __tablename__ = 'amenities'
-        place_amenities = relationship("PlaceAmenity", cascade="all,\
-        delete-orphan", backref="amenities")
+        name = Column(String(128), nullable=False)
+        place_amenities = relationship(
+            "PlaceAmenity", cascade="all,delete-orphan", backref="amenities")
     else:
         name = ""
 
