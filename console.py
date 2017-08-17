@@ -91,6 +91,9 @@ class HBNBCommand(cmd.Cmd):
 
         # put arg key/vals  into dict
         args = arg.split()
+        if len(args) < 1:
+            print("** class name missing **")
+            return
         if args[0] in CNC:
             cname = args[0]
             kwargs = {}
@@ -105,8 +108,55 @@ class HBNBCommand(cmd.Cmd):
             for (k, v) in CNC.items():
                 if k == cname:
                     my_obj = v(**kwargs)  # create object
+                    if (self.check_params(my_obj, kwargs) == 0):
+                        return
                     my_obj.save()
                     print(my_obj.id)
+
+    def check_params(self, obj, args):
+        """
+        checks objects for unique required parameters
+        """
+        if type(obj) == State:
+            if obj.name is None:
+                return 0
+
+        if type(obj) == City:
+            if obj.name is None or obj.state_id is None:
+                return 0
+            all_objs = storage.all()
+            if args['state_id'] not in all_objs:
+                return 0
+
+        if type(obj) == Place:
+            if (
+                    obj.city_id is None or
+                    obj.user_id is None or
+                    obj.name is None or
+                    obj.description is None or
+                    obj.number_rooms is None or
+                    obj.number_bathrooms is None or
+                    obj.max_guest is None or
+                    obj.price_by_night is None):
+                return 0
+
+        if type(obj) == User:
+            if (
+                    obj.email is None or obj.password is None or
+                    obj.first_name is None or obj.last_name is None):
+                return 0
+
+        if type(obj) == Review:
+            if (
+                    obj.text is None or obj.place_id is None or
+                    obj.user_id is None):
+                return 0
+
+        if type(obj) == Amenity:
+            if (obj.name is None):
+                return 0
+
+        return 1
 
     def do_show(self, arg):
         """show: show [ARG] [ARG1]
