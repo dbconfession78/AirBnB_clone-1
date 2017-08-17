@@ -23,7 +23,7 @@ strptime = datetime.strptime
 class BaseModel():
     """attributes and functions for BaseModel class"""
 
-    if os.getenv("HBNB_TYPE_STORAGE") == "db":
+    if environ["HBNB_TYPE_STORAGE"] == "db":
         id = Column(String(60), nullable=False, primary_key=True)
         created_at = Column(DateTime, nullable=False,
                             default=datetime.utcnow())
