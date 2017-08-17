@@ -3,7 +3,6 @@
 Place Class from Models Module
 """
 from models.base_model import BaseModel, Base
-from models.amenity import Amenity  # FIXED: added Amenity for PlaceAmenity fix below
 from sqlalchemy import Column, String, Integer, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from os import getenv, environ
