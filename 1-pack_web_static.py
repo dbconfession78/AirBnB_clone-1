@@ -5,6 +5,7 @@ Module: 1-pack_web_static
 from fabric.api import *
 import time
 
+
 def do_pack():
     """
     packages the web_static folders contents into a tar (.tgz)
