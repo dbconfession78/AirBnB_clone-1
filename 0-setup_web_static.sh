@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # updates webservers for the deployment of abnb web_static
+rm /etc/nginx/sites-enabled/*~
 apt-get update
 apt-get install -y nginx
 service nginx start
 
-mkdir -p /data/web-static/releases /data/web-static/shared /data/web_static/releases/test
+mkdir -p /data/web_static/releases /data/web_static/shared /data/web_static/releases/test
 echo -e "<!DOCTYPE html>\n<html>\n    <head>\n    </head>\n    <body>\n        Holberton School\n    </body>\n</html>" | cat > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 chown -R ubuntu:ubuntu  /data
