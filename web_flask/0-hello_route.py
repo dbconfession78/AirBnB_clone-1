@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-0-hell_route.py - starts a Flask web app
+0-hell_route - starts a Flask web app
 """
 from flask import Flask
 app = Flask('__name__')
