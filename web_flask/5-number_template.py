@@ -3,7 +3,7 @@
 5-number_template - starts a Flask web application
 """
 from flask import Flask
-from flask import abort, render_template
+from flask import render_template
 app = Flask(__name__)
 
 
