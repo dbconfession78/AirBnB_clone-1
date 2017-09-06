@@ -26,11 +26,12 @@ class State(BaseModel, Base):
         def cities(self):
             """ returns all city objects  associated with this State  """
 
+            cities = models.storage.all('City').values()
+
             # this one line does all of the commented
             results = [city for city in cities if city.state_id == self.id]
 
 #            results = []
-#            cities = models.storage.all('City').values()
 #            for city in cities:
 #                if (city.state_id == self.id):
 #                    results.append(city)
