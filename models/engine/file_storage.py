@@ -29,7 +29,7 @@ class FileStorage:
     __objects = {}
 
     def delete(self, obj=None):
-        """ deletes obj from __objects if it extists """        
+        """ deletes obj from __objects if it extists """
         if obj.id in FileStorage.__objects.keys():
             del(FileStorage.__objects[obj.id])
 
@@ -44,7 +44,7 @@ class FileStorage:
             for k, v in FileStorage.__objects.items():
                 if v.__class__.__name__ == cls:
                     result[k] = v
-            return result        
+            return result
 
     def new(self, obj):
         """sets / updates in __objects the obj with key <obj class name>.id"""
@@ -74,7 +74,6 @@ class FileStorage:
         for o_id, d in new_objs.items():
             k_cls = d['__class__']
             FileStorage.__objects[o_id] = FileStorage.CNC[k_cls](**d)
-
 
     def close(self):
         """  calls reload for desirializing JSON to object  """
