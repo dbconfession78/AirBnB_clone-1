@@ -21,20 +21,21 @@ class State(BaseModel, Base):
     else:
         name = ""
 
-
-    if ('HBNB_TYPE_STORAGE' in environ and environ['HBNB_TYPE_STORAGE'] != 'db'):
+    if (environ['HBNB_TYPE_STORAGE'] and environ['HBNB_TYPE_STORAGE'] != 'db'):
         @property
         def cities(self):
             """ returns all city objects  associated with this State  """
-            results = []
-            cities = models.storage.all('City').values()
-            for city in cities:
-                if (city.state_id == self.id):
-                    results.append(city)
+
+            # this one line does all of the commented
+            results = [city for city in cities if city.state_id == self.id]
+
+#            results = []
+#            cities = models.storage.all('City').values()
+#            for city in cities:
+#                if (city.state_id == self.id):
+#                    results.append(city)
 
             return (results)
-                
-            
 
     def __init__(self, *args, **kwargs):
         """instantiates a new state"""
