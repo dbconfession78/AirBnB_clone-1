@@ -21,7 +21,7 @@ class State(BaseModel, Base):
     else:
         name = ""
 
-    if (environ['HBNB_TYPE_STORAGE'] and environ['HBNB_TYPE_STORAGE'] != 'db'):
+    if (getenv('HBNB_TYPE_STORAGE') != 'db'):
         @property
         def cities(self):
             """ returns all city objects  associated with this State  """
