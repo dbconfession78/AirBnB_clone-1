@@ -29,18 +29,29 @@ class FileStorage:
     __objects = {}
 
     def delete(self, obj=None):
-        """ deletes obj from __objects if it extists """
-        if obj in FileStorage.__objects:
-            del(FileStorage.__objects[obj])
+        """ deletes obj from __objects if it extists """        
+        if obj.id in FileStorage.__objects.keys():
+            del(FileStorage.__objects[obj.id])
 
     def all(self, cls=None):
         """returns private attribute: __objects"""
-        return FileStorage.__objects
+        # return FileStorage.__objects
+
+        if cls is None:
+            return FileStorage.__objects
+        else:
+            result = {}
+            for k, v in FileStorage.__objects.items():
+                if v.__class__.__name__ == cls:
+                    result[k] = v
+            return result        
 
     def new(self, obj):
         """sets / updates in __objects the obj with key <obj class name>.id"""
-        bm_id = "{}.{}".format(type(obj).__name__, obj.id)
-        FileStorage.__objects[bm_id] = obj
+        if obj is not None:
+            FileStorage.__objects[obj.id] = obj
+#        bm_id = "{}.{}".format(type(obj).__name__, obj.id)
+#        FileStorage.__objects[bm_id] = obj
 
     def save(self):
         """serializes __objects to the JSON file (path: __file_path)"""
@@ -63,3 +74,8 @@ class FileStorage:
         for o_id, d in new_objs.items():
             k_cls = d['__class__']
             FileStorage.__objects[o_id] = FileStorage.CNC[k_cls](**d)
+
+
+    def close(self):
+        """  calls reload for desirializing JSON to object  """
+        self.reload()
