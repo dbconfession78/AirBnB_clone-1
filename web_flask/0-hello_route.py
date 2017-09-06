@@ -3,7 +3,7 @@
 0-hell_route - starts a Flask web app
 """
 from flask import Flask
-app = Flask('__name__')
+app = Flask(__name__)
 
 
 @app.route('/')

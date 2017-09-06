@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 """
-4-number_route.py - starts a Flask web application
+5-number_template - starts a Flask web application
 """
 from flask import Flask
+from flask import abort, render_template
 app = Flask(__name__)
 
 
@@ -44,6 +45,14 @@ def number(n):
     """ only returns if n's value is an int """
     app.url_map.strict_slashes = False
     return ('{} is a number'.format(n))
+
+
+@app.route('/number_template/<int:n>')
+def number_template(n):
+    """ outputs modified html page only if
+    n is an integer """
+    app.url_map.strict_slashes = False
+    return render_template('5-number.html', n=n)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
