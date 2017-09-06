@@ -4,9 +4,10 @@ State Class from Models Module
 """
 
 from models.base_model import BaseModel, Base
+import models
 from sqlalchemy import String, Column
 from sqlalchemy.orm import relationship
-from os import environ
+from os import environ, getenv
 
 
 class State(BaseModel, Base):
@@ -19,6 +20,17 @@ class State(BaseModel, Base):
                               backref="state")
     else:
         name = ""
+
+
+    if getenv('HBNB_TYPE_STORAGE', 'fs') != 'db':
+        @property
+        def cities(self):
+            """
+            returns all cities in a State
+            """
+            cities = models.storage.all("City").values()
+            result = [city for city in cities if city.state_id == self.id]
+            return result
 
     def __init__(self, *args, **kwargs):
         """instantiates a new state"""
