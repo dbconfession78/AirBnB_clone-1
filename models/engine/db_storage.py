@@ -42,6 +42,23 @@ class DBStorage():
                 Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        """ returns a dictionary of all objects """
+        obj_dict = {}
+        if cls:
+            obj_class = self.__session.query(self.__CNC.get(cls)).all()
+            for item in obj_class:
+                obj_dict[item.id] = item
+            return obj_dict
+        for class_name in self.__CNC:
+            if class_name == 'BaseModel':
+                continue
+            obj_class = self.__session.query(
+                self.__CNC.get(class_name)).all()
+            for item in obj_class:
+                obj_dict[item.id] = item
+        return obj_dict
+
+    def all_S(self, cls=None):
         objects = {}
         if cls:
             # user does not specify Class, so return all
@@ -83,5 +100,5 @@ class DBStorage():
         self.__session.commit()
 
     def close(self):
-        """ closes this session """
+        """ closes this storage session  """
         self.__session.remove()
