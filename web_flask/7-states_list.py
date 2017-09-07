@@ -8,13 +8,13 @@ app = Flask(__name__)
 
 
 @app.teardown_appcontext
-def storage_close(exception):
+def teardown(exception):
     """  close storage session """
     storage.close()
 
-
 @app.route('/states_list')
 def states_list():
+    """ injects states list into html  """
     app.url_map.strict_slashes = False
     states = storage.all('State').values()
     return (render_template('7-states_list.html', states=states))
