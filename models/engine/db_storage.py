@@ -41,7 +41,7 @@ class DBStorage():
             if os.environ("HBNB_ENV") == 'test':
                 Base.metadata.drop_all(self.__engine)
 
-    def all(self, cls=None):
+    def all_OLD(self, cls=None):
         """ returns a dictionary of all objects """
         obj_dict = {}
         if cls:
@@ -58,7 +58,7 @@ class DBStorage():
                 obj_dict[item.id] = item
         return obj_dict
 
-    def all_S(self, cls=None):
+    def all(self, cls=None):
         objects = {}
         if cls:
             # user does not specify Class, so return all
