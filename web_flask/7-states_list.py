@@ -13,10 +13,9 @@ def teardown(self):
     storage.close()
 
 
-@app.route('/states_list')
+@app.route('/states_list', strict_slashes=False)
 def states_list():
     """ injects states list into html  """
-    app.url_map.strict_slashes = False
     states = storage.all('State').values()
     return (render_template('7-states_list.html', states=states))
 
