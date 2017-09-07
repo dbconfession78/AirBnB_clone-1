@@ -12,6 +12,7 @@ def teardown(exception):
     """  close storage session """
     storage.close()
 
+
 @app.route('/states_list')
 def states_list():
     """ injects states list into html  """
