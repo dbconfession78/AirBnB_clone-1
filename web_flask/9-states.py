@@ -12,6 +12,8 @@ app = Flask(__name__)
 def get_states():
     """ displays an html page with states  """
     states = storage.all('State').values()
+#    states = []
+
     return render_template('9-states.html', states=states)
 
 
