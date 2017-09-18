@@ -13,7 +13,6 @@ from os import environ, getenv
 class State(BaseModel, Base):
     """State class handles all application states"""
 
-    #    if 'HBNB_TYPE_STORAGE' in environ and environ['HBNB_TYPE_STORAGE'] == 'db':
     if getenv("HBNB_TYPE_STORAGE") == 'db':
         __tablename__ = 'states'
         name = Column(String(128), nullable=False)
@@ -22,7 +21,7 @@ class State(BaseModel, Base):
     else:
         name = ""
 
-    if (getenv('HBNB_TYPE_STORAGE') != 'db'):
+        #    if (getenv('HBNB_TYPE_STORAGE') != 'db'):
         @property
         def cities(self):
             """ returns all city objects  associated with this State  """
