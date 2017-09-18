@@ -12,9 +12,10 @@ app = Flask(__name__)
 def get_states():
     """ displays an html page with states  """
     states = storage.all('State').values()
-#    states = []
+    state_count = len(states)
 
-    return render_template('9-states.html', states=states)
+    return render_template('9-states.html', states=states,
+                           state_count=state_count)
 
 
 @app.route('/states/<id>', strict_slashes=False)
