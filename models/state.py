@@ -27,17 +27,23 @@ class State(BaseModel, Base):
         def cities(self):
             """ returns all city objects  associated with this State  """
 
-            cities = models.storage.all('City').values()
+            #  cities = models.storage.all('City').values()
+
+            cities_list = []
+            for city in models.storage.all("City").values():
+                if city.state_id == self.id:
+                    cities_list.append(city)
+            return cities_list
 
             # this one line does all of the commented
-            results = [city for city in cities if city.state_id == self.id]
+#            results = [city for city in cities if city.state_id == self.id]
 
 #            results = []
 #            for city in cities:
 #                if (city.state_id == self.id):
 #                    results.append(city)
 
-            return (results)
+#           return (results)
 
     def __init__(self, *args, **kwargs):
         """instantiates a new state"""
