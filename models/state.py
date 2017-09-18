@@ -45,6 +45,6 @@ class State(BaseModel, Base):
 
 #           return (results)
 
-    def __init__(self, *args, **kwargs):
-        """instantiates a new state"""
-        super().__init__(self, *args, **kwargs)
+#    def __init__(self, *args, **kwargs):
+#       """instantiates a new state"""
+#      super().__init__(self, *args, **kwargs)
