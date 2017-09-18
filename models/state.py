@@ -3,11 +3,17 @@
 State Class from Models Module
 """
 
+# from sqlalchemy import String, Column
+# from sqlalchemy.orm import relationship
+# from models.base_model import BaseModel, Base
+# import models
+# from os import environ, getenv
+
+from sqlalchemy import Column, String
+from sqlalchemy import *
+from sqlalchemy.orm import *
 from models.base_model import BaseModel, Base
-import models
-from sqlalchemy import String, Column
-from sqlalchemy.orm import relationship
-from os import environ, getenv
+from os import getenv, environ
 
 
 class State(BaseModel, Base):
