@@ -12,24 +12,11 @@ app = Flask(__name__)
 def get_states():
     """ displays an html page with states  """
     states = storage.all('State').values()
-#    for state in states:
-#        for city in state.cities:
-#            input(city.name)
-
-# hold onto this. might need it in anothe rproject
-# shows cities by state
-#    for k, v in states.items():
-#        input(v.name)
-#    for v in states.values():
-#        input('-- {} --'.format(v.name))
-#       for city in v.cities:
-#          input('\t{}'.format(city.name))
-
     return render_template('9-states.html', states=states)
 
 
 @app.route('/states/<id>', strict_slashes=False)
-def state_cities(id=None):
+def state_cities(id):
     """ displays an html page with a single state  """
     states = storage.all('State')
     if id is None:
@@ -38,7 +25,7 @@ def state_cities(id=None):
     state = ""
     cities = []
     for k in states.keys():
-        if id in k:
+        if id == k:
             state = states.get(k)
             cities = state.cities
     return render_template('9-states.html', state=state, cities=cities)
@@ -50,4 +37,5 @@ def teardown(self):
     storage.close()
 
 if __name__ == "__main__":
+    """ runs application only if not being imported  """
     app.run(host='0.0.0.0', port=5000)
